@@ -1,0 +1,409 @@
+/* =====================================================================
+   NeuroBreathe AI - Clinical-Grade Medical SaaS Design System
+   Inspired by Ada Health, Epic, and premium modern telehealth platforms
+   ===================================================================== */
+
+:root {
+  /* Surface & Background System */
+  --surface-bg: #070b14;
+  --surface-card: #0d1527;
+  --surface-card-hover: #111b33;
+  --surface-panel: #131f38;
+  --surface-elevated: #162442;
+  
+  /* Borders & Dividers */
+  --border-subtle: #1c2b48;
+  --border-medium: #273b60;
+  --border-focus: #14b8a6;
+
+  /* Clinical Typography System */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-heading: #ffffff;
+
+  /* Clinical Diagnostic Palette (Reserved for clinical indicators) */
+  --clinical-teal: #0d9488;
+  --clinical-teal-light: #14b8a6;
+  --clinical-cyan: #06b6d4;
+  --clinical-sky: #0284c7;
+  
+  --clinical-emerald: #10b981;
+  --clinical-emerald-bg: rgba(16, 185, 129, 0.12);
+  --clinical-emerald-border: rgba(16, 185, 129, 0.35);
+
+  --clinical-amber: #f59e0b;
+  --clinical-amber-bg: rgba(245, 158, 11, 0.12);
+  --clinical-amber-border: rgba(245, 158, 11, 0.35);
+
+  --clinical-rose: #f43f5e;
+  --clinical-rose-bg: rgba(244, 63, 94, 0.12);
+  --clinical-rose-border: rgba(244, 63, 94, 0.35);
+
+  /* Shadows */
+  --shadow-clinical-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-clinical-md: 0 4px 16px -2px rgba(0, 0, 0, 0.4), 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-clinical-lg: 0 12px 30px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.35);
+  --shadow-teal-glow: 0 0 20px -3px rgba(13, 148, 136, 0.25);
+  --shadow-amber-glow: 0 0 20px -3px rgba(245, 158, 11, 0.25);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--surface-bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Restrained Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2e4a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2b3f63;
+}
+
+/* =====================================================================
+   CARD SYSTEM & ELEVATIONS
+   ===================================================================== */
+.clinical-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-clinical-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clinical-card:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-clinical-md);
+}
+
+/* PredictCard Dedicated Structural Styling */
+.predict-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-clinical-md);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.predict-card:hover {
+  border-color: var(--border-medium);
+}
+
+.predict-header {
+  padding: 1.15rem 1.35rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, #101a30 0%, #0b1324 100%);
+}
+
+.predict-body {
+  padding: 1.35rem;
+}
+
+/* Metric strip */
+.metric-box {
+  background: linear-gradient(180deg, #0f1a30 0%, #0b1324 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.85rem;
+  padding: 0.85rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.metric-box:hover {
+  border-color: var(--border-medium);
+  background: #121e38;
+}
+
+/* Nav Tab States */
+.tab-btn {
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background-color: #131f38;
+  border-color: var(--border-subtle);
+}
+
+.tab-btn.active {
+  color: #38bdf8;
+  background-color: #15223d;
+  border-color: #24385e;
+  font-weight: 600;
+  box-shadow: var(--shadow-clinical-sm);
+}
+
+/* =====================================================================
+   DRAG-AND-DROP DROPZONE
+   ===================================================================== */
+.dropzone-box {
+  border: 2px dashed #243654;
+  background: rgba(13, 21, 39, 0.5);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropzone-box:hover, .dropzone-box.dropzone-active {
+  border-color: var(--clinical-teal-light);
+  background: rgba(13, 148, 136, 0.08);
+  box-shadow: var(--shadow-teal-glow);
+  transform: translateY(-1px);
+}
+
+/* Audio Oscilloscope & Waveform Canvas */
+.oscilloscope-box {
+  background-color: #060a14;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+
+/* Interactive Canvas & Video HUD */
+.canvas-drawing-area {
+  background-color: #050811;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.85rem;
+  cursor: crosshair;
+  touch-action: none;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.video-hud-container {
+  position: relative;
+  background-color: #050811;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+
+.face-guide-oval {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52%;
+  height: 72%;
+  border: 2px dashed rgba(13, 148, 136, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.face-guide-oval.tracking {
+  border-color: rgba(16, 185, 129, 0.9);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+}
+
+.pulse-indicator {
+  animation: pulse-glow 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 8px #10b981); }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+/* Guide and Step Cards */
+.guide-card {
+  background: rgba(15, 24, 44, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.guide-card:hover {
+  border-color: var(--border-medium);
+}
+
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  background-color: #134e4a;
+  color: #5eead4;
+}
+
+/* Care Tip Card Styling */
+.care-tip-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.care-tip-card:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-clinical-md);
+}
+
+/* Clinical Table Styling */
+.clinical-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.clinical-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background-color: #0c1424;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.clinical-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(28, 43, 72, 0.7);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.clinical-table tr:last-child td {
+  border-bottom: none;
+}
+
+.clinical-table tr:hover td {
+  background-color: rgba(19, 31, 56, 0.5);
+}
+
+/* Shimmer Loading Skeleton */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #111c33 25%, #182849 50%, #111c33 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.5rem;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Focus accessibility */
+button:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--clinical-teal-light);
+  outline-offset: 2px;
+}
+
+/* Modal Backdrop & Report Sheet */
+.report-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.report-modal-container {
+  max-width: 860px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #0d1527;
+  border: 1px solid #273b60;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+.report-paper {
+  background: #ffffff;
+  color: #0f172a;
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+/* =====================================================================
+   PRINT STYLES (Clinical Hospital Discharge Format)
+   ===================================================================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .report-modal-backdrop, .report-modal-container, .report-paper, .report-paper * {
+    visibility: visible;
+  }
+  .report-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: transparent !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  .report-modal-container {
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  .report-paper {
+    padding: 1.2cm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .no-print {
+    display: none !important;
+  }
+  input {
+    border: none !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  textarea {
+    border: 1px solid #cbd5e1 !important;
+    background: transparent !important;
+    resize: none !important;
+    overflow: hidden !important;
+  }
+  tr {
+    page-break-inside: avoid;
+  }
+}
+

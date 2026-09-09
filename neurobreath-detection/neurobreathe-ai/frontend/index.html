@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroBreathe — Clinical Screening Platform</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            clinical: {
+              teal: '#0d9488',
+              slate: '#0f172a',
+              panel: '#131c2e',
+              border: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-teal-900/50">
+
+  <!-- Clinical Header Bar -->
+  <header class="border-b border-slate-800 bg-slate-900 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+        <div class="h-8 w-8 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
+          <i data-lucide="activity" class="h-4 w-4"></i>
+        </div>
+        <div>
+          <span class="text-base font-semibold text-slate-100 tracking-tight">NeuroBreathe</span>
+          <span class="text-xs text-slate-400 ml-1 font-normal">Clinical Screening Platform</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden lg:flex items-center space-x-1.5 overflow-x-auto">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-3 py-1.5 rounded text-xs active flex items-center gap-1.5 font-medium">
+          <i data-lucide="layout-grid" class="h-3.5 w-3.5"></i>
+          <span>Overview</span>
+        </button>
+        <button onclick="switchTab('parkinson')" id="nav-parkinson" class="tab-btn px-3 py-1.5 rounded text-xs flex items-center gap-1.5 font-medium">
+          <i data-lucide="brain" class="h-3.5 w-3.5 text-amber-400"></i>
+          <span>Parkinson's Center</span>
+        </button>
+        <button onclick="switchTab('respiratory')" id="nav-respiratory" class="tab-btn px-3 py-1.5 rounded text-xs flex items-center gap-1.5 font-medium">
+          <i data-lucide="wind" class="h-3.5 w-3.5 text-teal-400"></i>
+          <span>Respiratory Center</span>
+        </button>
+        <button onclick="switchTab('batch')" id="nav-batch" class="tab-btn px-3 py-1.5 rounded text-xs flex items-center gap-1.5 font-medium">
+          <i data-lucide="file-spreadsheet" class="h-3.5 w-3.5"></i>
+          <span>Cohort Batch</span>
+        </button>
+        <button onclick="switchTab('models-info')" id="nav-models-info" class="tab-btn px-3 py-1.5 rounded text-xs flex items-center gap-1.5 font-medium">
+          <i data-lucide="cpu" class="h-3.5 w-3.5"></i>
+          <span>Model Specs</span>
+        </button>
+      </nav>
+
+      <!-- System Status -->
+      <div class="flex items-center space-x-3">
+        <div id="system-status-badge" class="flex items-center gap-2 px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 text-xs">
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          <span id="status-text">Checking status</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: OVERVIEW -->
+    <!-- ================================================================= -->
+    <section id="tab-dashboard" class="space-y-6">
+      <!-- Institutional Status Header -->
+      <div class="clinical-card rounded-2xl p-6 sm:p-8 border border-slate-800/90 bg-slate-900/80 shadow-md">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-950/70 border border-teal-800/60 text-teal-400 text-xs font-semibold mb-3.5">
+            <i data-lucide="shield-check" class="h-3.5 w-3.5 text-teal-400"></i>
+            Dual-Center Clinical Screening Platform Active
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-100 tracking-tight leading-snug">
+            Comprehensive Clinical Screening for Respiratory & Neurological Health
+          </h1>
+          <p class="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
+            Welcome to NeuroBreathe. The platform is organized into two dedicated, single-page diagnostic centers: the <strong class="text-slate-100 font-semibold">Parkinson's Assessment Center</strong> (voice stability, hand steadiness spiral drawing, and 22 motor biomarkers) and the <strong class="text-slate-100 font-semibold">Respiratory Health Center</strong> (stethoscope lung sounds, virtual dynamic acoustic spirometry FEV1/FVC, and optical vitals). Each center provides clear step-by-step guides, plain-language results for non-technical users, personalized daily care tips, and 1-click downloadable Doctor Reports.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button onclick="switchTab('parkinson')" class="px-5 py-2.5 rounded-xl bg-amber-700 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium border border-amber-600 transition-colors flex items-center gap-2 shadow-sm">
+              <i data-lucide="brain" class="h-4 w-4"></i>
+              <span>Enter Parkinson's Center</span>
+            </button>
+            <button onclick="switchTab('respiratory')" class="px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white text-xs sm:text-sm font-medium border border-teal-600 transition-colors flex items-center gap-2 shadow-sm">
+              <i data-lucide="wind" class="h-4 w-4"></i>
+              <span>Enter Respiratory Center</span>
+            </button>
+            <button onclick="switchTab('batch')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-2">
+              <i data-lucide="file-spreadsheet" class="h-4 w-4"></i>
+              <span>Cohort Batch Screening</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Flagship Diagnostic Centers -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Module 1: Parkinson's Disease Center -->
+        <div class="clinical-card rounded-2xl p-6 border border-amber-900/50 hover:border-amber-600/60 bg-gradient-to-b from-amber-950/20 to-slate-900/80 transition-all shadow-sm flex flex-col justify-between">
+          <div class="space-y-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="brain" class="h-4 w-4"></i>
+                Module 1: Neurological Suite
+              </span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-950/80 border border-amber-800/60 text-amber-300 font-medium">XGBoost Ensemble</span>
+            </div>
+            <h2 class="text-lg font-bold text-slate-100">
+              Parkinson's Assessment Center
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Consolidates all neurological and motor tests into one single page. Evaluates sustained vocal phonation stamina (Maximum Phonation Time) and cycle-to-cycle frequency perturbations, paired with digital Archimedes spiral drawing for hand steadiness, drawing smoothness (jerk), and 4-7 Hz action tremors.
+            </p>
+            <div class="pt-2 text-xs sm:text-sm text-slate-300 space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <span><strong>Test 1:</strong> Voice Phonation & Stamina (MPT sustained "aaah" audio)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <span><strong>Test 2:</strong> Digital Archimedes Spiral (Hand steadiness & tremor)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <span><strong>Output:</strong> Unified Composite Diagnosis, Care Tips & Doctor Report</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="switchTab('parkinson')" class="mt-6 w-full py-2.5 px-4 rounded-xl bg-amber-700 hover:bg-amber-600 text-white text-xs sm:text-sm font-semibold border border-amber-600 transition-colors flex items-center justify-center gap-2 shadow-sm">
+            <span>Open Parkinson's Center</span>
+            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </button>
+        </div>
+
+        <!-- Module 2: Respiratory Health Center -->
+        <div class="clinical-card rounded-2xl p-6 border border-teal-900/50 hover:border-teal-600/60 bg-gradient-to-b from-teal-950/20 to-slate-900/80 transition-all shadow-sm flex flex-col justify-between">
+          <div class="space-y-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="wind" class="h-4 w-4"></i>
+                Module 2: Pulmonary Suite
+              </span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-teal-950/80 border border-teal-800/60 text-teal-300 font-medium">LightGBM AI</span>
+            </div>
+            <h2 class="text-lg font-bold text-slate-100">
+              Respiratory Health Center
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Consolidates all pulmonary tests into one single page. Analyzes electronic stethoscope auscultations for COPD wheezes and crackles, dynamic acoustic spirometry for FEV1, FVC, and Flow-Volume loop curves from forced exhalations, and contactless optical webcam vitals.
+            </p>
+            <div class="pt-2 text-xs sm:text-sm text-slate-300 space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-teal-400"></span>
+                <span><strong>Test 1:</strong> Lung Sound Auscultation (60-feature COPD acoustic AI)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-teal-400"></span>
+                <span><strong>Test 2:</strong> Virtual Dynamic Spirometry (FEV1 / FVC Candle Blow)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-teal-400"></span>
+                <span><strong>Test 3:</strong> Optical Webcam Vitals (Heart rate, Breathing rate, RSA)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-teal-400"></span>
+                <span><strong>Output:</strong> Unified Composite Diagnosis, Care Tips & Doctor Report</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="switchTab('respiratory')" class="mt-6 w-full py-2.5 px-4 rounded-xl bg-teal-700 hover:bg-teal-600 text-white text-xs sm:text-sm font-semibold border border-teal-600 transition-colors flex items-center justify-center gap-2 shadow-sm">
+            <span>Open Respiratory Center</span>
+            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: RESPIRATORY HEALTH CENTER (ALL RESPIRATORY TESTS IN ONE)   -->
+    <!-- ================================================================= -->
+    <section id="tab-respiratory" class="space-y-6 hidden">
+      <!-- Center Header -->
+      <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-teal-950/80 border border-teal-800 text-teal-400 text-xs font-semibold mb-1">
+            <i data-lucide="wind" class="h-3.5 w-3.5"></i>
+            Respiratory Health Center
+          </div>
+          <h2 class="text-xl font-bold text-slate-100">Complete Pulmonary Diagnostic Suite</h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Conduct all respiratory tests on a single page: Stethoscope Lung Sounds, Virtual Dynamic Spirometry (FEV1/FVC), and Contactless Vitals.
+          </p>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <a href="#resp-care-tips" class="px-3 py-1.5 rounded bg-slate-850 hover:bg-slate-800 text-slate-300 text-xs border border-slate-750 transition-colors flex items-center gap-1.5">
+            <i data-lucide="heart-pulse" class="h-3.5 w-3.5 text-teal-400"></i>
+            <span>Tips to Take Care</span>
+          </a>
+          <button onclick="openDoctorReport('respiratory')" class="px-3.5 py-1.5 rounded bg-teal-700 hover:bg-teal-600 text-white text-xs font-semibold border border-teal-600 transition-colors flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="file-text" class="h-3.5 w-3.5"></i>
+            <span>Doctor Report (PDF)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Test Navigation Filter Bar -->
+      <div class="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900 border border-slate-800 overflow-x-auto text-xs">
+        <button onclick="filterRespStation('all')" id="pill-resp-all" class="px-3 py-1 rounded font-medium transition-colors bg-slate-800 text-teal-300">
+          All 3 Tests Overview
+        </button>
+        <button onclick="filterRespStation('auscultation')" id="pill-resp-ausc" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200 transition-colors">
+          1. Lung Stethoscope Sounds
+        </button>
+        <button onclick="filterRespStation('spirometry')" id="pill-resp-spiro" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200 transition-colors">
+          2. Virtual Dynamic Spirometry (FEV1/FVC)
+        </button>
+        <button onclick="filterRespStation('rppg')" id="pill-resp-rppg" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200 transition-colors">
+          3. Optical Webcam Vitals (RSA)
+        </button>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TEST STATION 1: LUNG SOUND AUSCULTATION (STETHOSCOPE SOUNDS)  -->
+      <!-- ============================================================= -->
+      <div id="station-resp-auscultation" class="space-y-4">
+        <!-- Step-by-Step Test Guide -->
+        <div class="guide-card p-4 rounded-xl">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGuide('guide-resp-ausc')">
+            <div class="flex items-center gap-2.5">
+              <span class="step-badge">1</span>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">How to Conduct Test 1: Lung Sound Auscultation</h3>
+                <p class="text-xs text-slate-400">Step-by-step instructions for electronic stethoscope recording, file upload, or clinical hospital playback</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" id="guide-resp-ausc-icon" class="h-4 w-4 text-slate-400 transition-transform"></i>
+          </div>
+          <div id="guide-resp-ausc" class="mt-3.5 pt-3.5 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs sm:text-sm text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 1: Get in Position</strong>
+              Sit upright comfortably in a quiet room. Uncover your chest and take deep, slow breaths in and out through your mouth.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 2: Place Microphone</strong>
+              Hold your microphone or digital stethoscope firmly against your upper left or right chest, avoiding clothes rustling.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 3: Record, Upload or Test Sample</strong>
+              Click "Record lung sound" for 8-10 seconds, drop a prerecorded audio file, or click one of the verified authentic ICBHI hospital cases.
+            </div>
+          </div>
+        </div>
+
+        <!-- Acquisition & PredictCard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column: Audio Acquisition & Library -->
+          <div class="lg:col-span-6 space-y-4">
+            <!-- Live Stethoscope Recording -->
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="mic" class="h-4 w-4 text-teal-400"></i>
+                  Live Stethoscope / Microphone Recording
+                </h3>
+                <span id="resp-recording-timer" class="text-xs font-mono text-slate-400 px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800">00:00</span>
+              </div>
+
+              <div class="w-full h-24 oscilloscope-box rounded-xl relative flex items-center justify-center overflow-hidden border border-slate-800">
+                <canvas id="resp-audio-canvas" class="w-full h-full"></canvas>
+                <div id="resp-mic-idle-msg" class="absolute text-slate-400 text-xs text-center px-4 pointer-events-none">
+                  Microphone standby. Press "Record lung sound" to capture respiratory auscultation.
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-1">
+                <button id="btn-resp-record-toggle" onclick="toggleRespRecording()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-2 shadow-sm">
+                  <span class="h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                  <span id="btn-resp-record-label">Record lung sound</span>
+                </button>
+                <audio id="resp-recorded-playback" controls class="hidden h-8 max-w-[200px]"></audio>
+                <button id="btn-analyze-resp-recorded" onclick="analyzeRecordedRespAudio()" class="hidden px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-600 text-white text-xs sm:text-sm font-semibold border border-teal-600 transition-colors shadow-sm flex items-center gap-1.5">
+                  <i data-lucide="activity" class="h-3.5 w-3.5"></i>
+                  <span>Analyze lung sound</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Audio File Upload (WAV, MP3, FLAC, OGG) -->
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="upload-cloud" class="h-4 w-4 text-teal-400"></i>
+                  Upload Lung Sound Audio File
+                </h3>
+                <span class="text-[11px] text-teal-400/90 font-medium px-2.5 py-0.5 rounded-full bg-teal-950/70 border border-teal-800/60">WAV • MP3 • FLAC</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Upload a prerecorded stethoscope capture, digital auscultation file, or voice recorder clip for instant 60-feature spectral analysis.
+              </p>
+
+              <!-- Drag & Drop Zone -->
+              <div id="resp-audio-dropzone" onclick="document.getElementById('resp-file-input').click()" 
+                   class="dropzone-box border-2 border-dashed border-slate-700/80 hover:border-teal-500/80 bg-slate-950/50 hover:bg-slate-900/60 rounded-xl p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2">
+                <input type="file" id="resp-file-input" accept=".wav,.mp3,.ogg,.flac,.m4a" onchange="handleAudioFileUpload(event)" class="hidden">
+                <div class="h-10 w-10 rounded-full bg-teal-950/80 border border-teal-800/80 flex items-center justify-center text-teal-400">
+                  <i data-lucide="file-audio" class="h-5 w-5"></i>
+                </div>
+                <div>
+                  <span class="text-xs sm:text-sm font-medium text-slate-200">Drag & drop your audio file here, or <span class="text-teal-400 underline underline-offset-2">browse files</span></span>
+                  <p class="text-[11px] text-slate-400 mt-1">Supports WAV (recommended), MP3, FLAC, OGG up to 25MB</p>
+                </div>
+              </div>
+
+              <!-- Selected File Preview & Controls -->
+              <div id="uploaded-file-preview-box" class="hidden p-3.5 rounded-xl bg-slate-950/80 border border-teal-900/60 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <i data-lucide="check-circle-2" class="h-4 w-4 text-teal-400 shrink-0"></i>
+                    <span id="uploaded-file-name" class="text-xs font-semibold text-slate-200 truncate"></span>
+                  </div>
+                  <button type="button" onclick="document.getElementById('resp-file-input').click()" class="text-xs text-slate-400 hover:text-teal-300 underline shrink-0">Change</button>
+                </div>
+                <audio id="uploaded-audio-playback" controls class="hidden w-full h-8"></audio>
+                <button id="btn-analyze-uploaded" onclick="submitUploadedAudio()" class="hidden w-full py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs sm:text-sm font-semibold shadow-sm transition-colors flex items-center justify-center gap-2">
+                  <i data-lucide="activity" class="h-4 w-4"></i>
+                  <span>Analyze Lung Sound Recording</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Authentic Clinical Hospital Cases (1-Click Test) -->
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="database" class="h-4 w-4 text-teal-400"></i>
+                  1-Click Verified Clinical Hospital Recordings
+                </h3>
+                <span class="text-xs text-slate-400 font-mono">ICBHI Stethoscope Database</span>
+              </div>
+
+              <div class="space-y-2.5">
+                <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-colors flex items-center justify-between gap-3">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs sm:text-sm font-semibold text-slate-200">Patient 104</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-800 font-medium">Confirmed COPD</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Littmann 3200 Electronic Stethoscope, Anterior Left chest</p>
+                  </div>
+                  <button onclick="selectAndAnalyzeSample('104_copd')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 shrink-0 transition-colors">
+                    Test this sound
+                  </button>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-colors flex items-center justify-between gap-3">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs sm:text-sm font-semibold text-slate-200">Patient 102</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded-full bg-green-950/80 text-green-300 border border-green-800 font-medium">Healthy Normal Breath</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Meditron Master Elite Stethoscope, Anterior Right chest</p>
+                  </div>
+                  <button onclick="selectAndAnalyzeSample('102_healthy')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 shrink-0 transition-colors">
+                    Test this sound
+                  </button>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-colors flex items-center justify-between gap-3">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs sm:text-sm font-semibold text-slate-200">Patient 101</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-800 font-medium">Upper Respiratory Infection (URTI)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Meditron Master Elite Stethoscope, Anterior Left chest</p>
+                  </div>
+                  <button onclick="selectAndAnalyzeSample('101_urti')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 shrink-0 transition-colors">
+                    Test this sound
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: PredictCard -->
+          <div class="lg:col-span-6">
+            <div class="predict-card rounded-2xl shadow-sm border border-slate-800/90 overflow-hidden">
+              <div class="predict-header p-4 sm:p-5 flex items-center justify-between border-b border-slate-800/80">
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Test 1 Results: Lung Auscultation</h3>
+                  <span class="text-xs text-slate-400">Acoustic breath sound classification</span>
+                </div>
+                <span id="resp-badge-timestamp" class="text-xs font-mono text-slate-400 px-2.5 py-0.5 rounded-full bg-slate-950 border border-slate-800">Standby</span>
+              </div>
+
+              <div class="predict-body p-4 sm:p-6 space-y-4 sm:space-y-5">
+                <div id="resp-placeholder" class="py-12 text-center text-slate-500 space-y-2.5">
+                  <div class="h-12 w-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-slate-500">
+                    <i data-lucide="stethoscope" class="h-6 w-6"></i>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-400">No breath sound analyzed yet.<br>Record a sound, upload an audio file, or click a verified hospital case to screen.</p>
+                </div>
+
+                <div id="resp-result-details" class="hidden space-y-4">
+                  <div id="resp-diagnosis-banner" class="p-4 rounded-xl border border-slate-700/80 bg-slate-900/80 shadow-sm">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-medium text-slate-400">Primary Classification</span>
+                      <span id="resp-risk-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+                    </div>
+                    <h4 id="resp-diagnosis-text" class="text-lg sm:text-xl font-bold text-slate-100 mt-1.5 tracking-tight"></h4>
+                    <p id="resp-confidence-text" class="text-xs text-slate-300 mt-1 font-mono"></p>
+                  </div>
+
+                  <div class="space-y-2">
+                    <div class="flex justify-between text-xs sm:text-sm font-medium">
+                      <span class="text-slate-300">COPD Likelihood: <span id="resp-copd-pct" class="font-mono text-slate-100">0%</span></span>
+                      <span class="text-slate-300">Healthy / Non-COPD: <span id="resp-notcopd-pct" class="font-mono text-slate-100">0%</span></span>
+                    </div>
+                    <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+                      <div id="resp-bar-copd" class="h-full bg-red-500 transition-all duration-500" style="width: 50%"></div>
+                      <div id="resp-bar-notcopd" class="h-full bg-emerald-500 transition-all duration-500" style="width: 50%"></div>
+                    </div>
+                  </div>
+
+                  <!-- Cadence & Respiratory Metrics -->
+                  <div id="resp-rate-card" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs sm:text-sm font-semibold text-slate-300">Respiratory Cadence:</span>
+                      <span id="metric-resp-bpm-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-950/80 text-green-300 border border-green-800">Normal</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center text-xs">
+                      <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                        <span class="text-slate-400 block text-[11px]">Breathing Rate</span>
+                        <span id="metric-resp-bpm" class="text-slate-100 font-mono font-bold text-base mt-0.5">--</span>
+                        <span class="text-[10px] text-slate-500">breaths/min</span>
+                      </div>
+                      <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                        <span class="text-slate-400 block text-[11px]">Duration</span>
+                        <span id="metric-resp-duration" class="text-slate-100 font-mono font-bold text-base mt-0.5">--</span>
+                        <span class="text-[10px] text-slate-500">seconds</span>
+                      </div>
+                      <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                        <span class="text-slate-400 block text-[11px]">Sound Pitch</span>
+                        <span id="metric-resp-centroid" class="text-slate-100 font-mono font-bold text-base mt-0.5">--</span>
+                        <span class="text-[10px] text-slate-500">Hz centroid</span>
+                      </div>
+                      <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                        <span class="text-slate-400 block text-[11px]">Energy (RMS)</span>
+                        <span id="metric-resp-rms" class="text-slate-100 font-mono font-bold text-base mt-0.5">--</span>
+                        <span id="metric-resp-zcr" class="text-[10px] text-slate-500">ZCR: --</span>
+                      </div>
+                    </div>
+                    <p id="metric-resp-tempo-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+                  </div>
+
+                  <!-- Plain Language Explanation -->
+                  <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs sm:text-sm text-slate-300 space-y-1">
+                    <span class="font-semibold text-teal-400 block">Plain-Language Summary:</span>
+                    <span id="resp-interpretation-text" class="leading-relaxed"></span>
+                  </div>
+
+                  <!-- Waveform Preview -->
+                  <div>
+                    <span class="text-xs text-slate-400 block mb-1.5 font-medium">Acoustic Waveform Profile</span>
+                    <div class="h-14 w-full bg-slate-950 rounded-xl p-1.5 border border-slate-800 overflow-hidden">
+                      <canvas id="resp-waveform-canvas" class="w-full h-full"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TEST STATION 2: VIRTUAL DYNAMIC ACOUSTIC SPIROMETRY (FEV1/FVC)-->
+      <!-- ============================================================= -->
+      <div id="station-resp-spirometry" class="space-y-4 pt-4 border-t border-slate-800">
+        <!-- Step-by-Step Test Guide -->
+        <div class="guide-card p-4 rounded-xl">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGuide('guide-resp-spiro')">
+            <div class="flex items-center gap-2.5">
+              <span class="step-badge">2</span>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">How to Conduct Test 2: Virtual Dynamic Spirometry (FEV1 / FVC)</h3>
+                <p class="text-xs text-slate-400">Step-by-step instructions for forced exhalation "candle blow" airflow mechanics</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" id="guide-resp-spiro-icon" class="h-4 w-4 text-slate-400 transition-transform"></i>
+          </div>
+          <div id="guide-resp-spiro" class="mt-3.5 pt-3.5 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-4 gap-3.5 text-xs sm:text-sm text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 1: Full Inhalation</strong>
+              Breathe in as deeply and completely as possible until your lungs are 100% full.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 2: Distance</strong>
+              Hold your microphone about 10–15 cm (4–6 inches) away from your lips, facing straight toward you.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 3: Blast Out Like Candles</strong>
+              Press "Record Candle Blow" and BLAST out all air as hard, fast, and completely as you can for 4 full seconds.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-teal-400 block mb-1 font-semibold">Step 4: Or 1-Click Preset</strong>
+              If you do not have a microphone right now, click one of the 1-click presets below to simulate airway states.
+            </div>
+          </div>
+        </div>
+
+        <!-- Acquisition & PredictCard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column: Candle Blow Recorder & Presets -->
+          <div class="lg:col-span-6 space-y-4">
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="gauge" class="h-4 w-4 text-teal-400"></i>
+                  Forced Exhalation "Candle Blow" Acquisition
+                </h3>
+                <span id="spiro-recording-timer" class="text-xs font-mono text-slate-400 px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800">00:00</span>
+              </div>
+
+              <!-- Oscilloscope -->
+              <div class="w-full h-24 oscilloscope-box rounded-xl relative flex items-center justify-center overflow-hidden border border-slate-800">
+                <canvas id="spiro-audio-canvas" class="w-full h-full"></canvas>
+                <div id="spiro-mic-idle-msg" class="absolute text-slate-400 text-xs text-center px-4 pointer-events-none">
+                  Microphone standby. Click "Record Candle Blow" and blow forcefully.
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <div class="flex flex-wrap items-center gap-3 pt-1">
+                <button id="btn-spiro-record-toggle" onclick="toggleSpiroRecording()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-2 shadow-sm">
+                  <span class="h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                  <span id="btn-spiro-record-label">Record Candle Blow (4s)</span>
+                </button>
+                <audio id="spiro-recorded-playback" controls class="hidden h-8 max-w-[180px]"></audio>
+                <button id="btn-analyze-spiro-recorded" onclick="analyzeRecordedSpiroAudio()" class="hidden px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-600 text-white text-xs sm:text-sm font-semibold border border-teal-600 transition-colors shadow-sm flex items-center gap-1.5">
+                  <i data-lucide="activity" class="h-3.5 w-3.5"></i>
+                  <span>Analyze Spirometry</span>
+                </button>
+              </div>
+
+              <!-- 1-Click Standardized Clinical Presets -->
+              <div class="pt-3 border-t border-slate-800/80 space-y-2">
+                <div class="text-xs text-slate-400 font-medium">Or test instantly using standardized clinical exhalations:</div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <button onclick="simulateSpirometryPreset('normal')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                    <span class="font-semibold text-emerald-400 block text-xs sm:text-sm">Healthy Airway</span>
+                    <span class="text-[11px] text-slate-400">FEV1/FVC 82.4%</span>
+                  </button>
+                  <button onclick="simulateSpirometryPreset('borderline')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                    <span class="font-semibold text-amber-400 block text-xs sm:text-sm">Borderline Concavity</span>
+                    <span class="text-[11px] text-slate-400">FEV1/FVC 70.9%</span>
+                  </button>
+                  <button onclick="simulateSpirometryPreset('copd')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                    <span class="font-semibold text-red-400 block text-xs sm:text-sm">COPD Obstruction</span>
+                    <span class="text-[11px] text-slate-400">FEV1/FVC 52.8%</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: PredictCard & Flow-Volume Loop -->
+          <div class="lg:col-span-6">
+            <div class="predict-card rounded-2xl shadow-sm border border-slate-800/90 overflow-hidden">
+              <div class="predict-header p-4 sm:p-5 flex items-center justify-between border-b border-slate-800/80">
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Test 2 Results: Virtual Dynamic Spirometry</h3>
+                  <p class="text-xs text-slate-400">Airway openness & Flow-Volume Loop curve</p>
+                </div>
+                <span id="spiro-risk-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-950 text-slate-400 border border-slate-800">
+                  Awaiting exhalation
+                </span>
+              </div>
+
+              <div class="predict-body p-4 sm:p-6 space-y-4 sm:space-y-5">
+                <!-- User-Friendly Metric Strip -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">FEV1 (Speed)</div>
+                    <div id="spiro-metric-fev1" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Liters in 1st sec</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">FVC (Capacity)</div>
+                    <div id="spiro-metric-fvc" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Total volume</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">FEV1 / FVC Ratio</div>
+                    <div id="spiro-metric-ratio" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Healthy &ge; 70%</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Peak Flow (PEF)</div>
+                    <div id="spiro-metric-pef" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Blow power (L/s)</div>
+                  </div>
+                </div>
+
+                <!-- Plain-Language Diagnostic Meaning -->
+                <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-1.5">
+                    <i data-lucide="heart" class="h-4 w-4 text-teal-400"></i>
+                    <span id="spiro-grade-title">What This Means for You:</span>
+                  </div>
+                  <p id="spiro-interpretation" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Record your candle blow or click a clinical preset above to see your airway openness and flow curve.
+                  </p>
+                </div>
+
+                <!-- Flow-Volume Chart Container -->
+                <div class="border border-slate-800 rounded-xl bg-slate-900/90 p-4 space-y-2.5">
+                  <div class="flex items-center justify-between text-xs sm:text-sm">
+                    <span class="font-semibold text-slate-300">Flow-Volume Curve (Expiratory Emptying Rate)</span>
+                    <span id="spiro-concavity-tag" class="text-xs font-mono text-slate-400">Airway Shape: --</span>
+                  </div>
+                  <div class="w-full h-44">
+                    <canvas id="spiro-chart"></canvas>
+                  </div>
+                  <div class="flex items-center justify-center gap-4 text-xs text-slate-400 pt-1">
+                    <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-teal-400"></span> Your Exhalation Curve</span>
+                    <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-slate-500"></span> Normal Reference Line</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TEST STATION 3: CONTACTLESS WEBCAM VITALS & RSA COUPLING      -->
+      <!-- ============================================================= -->
+      <div id="station-resp-rppg" class="space-y-4 pt-4 border-t border-slate-800">
+        <!-- Step-by-Step Test Guide -->
+        <div class="guide-card p-4 rounded-xl">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGuide('guide-resp-rppg')">
+            <div class="flex items-center gap-2.5">
+              <span class="step-badge">3</span>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">How to Conduct Test 3: Contactless Webcam Vitals & RSA</h3>
+                <p class="text-xs text-slate-400">Optical facial capillary scan tracking pulse, breathing cadence, and heart-lung synchrony</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" id="guide-resp-rppg-icon" class="h-4 w-4 text-slate-400 transition-transform"></i>
+          </div>
+          <div id="guide-resp-rppg" class="mt-3.5 pt-3.5 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs sm:text-sm text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-sky-400 block mb-1 font-semibold">Step 1: Good Lighting</strong>
+              Face your webcam in a reasonably well-lit room without harsh backlighting.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-sky-400 block mb-1 font-semibold">Step 2: Align Face in Oval</strong>
+              Align your face centered inside the green guide oval and stay comfortably still.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-sky-400 block mb-1 font-semibold">Step 3: 15-Second Scan</strong>
+              Click "Start 15s Optical Scan" and breathe naturally. No video is ever recorded or uploaded.
+            </div>
+          </div>
+        </div>
+
+        <!-- Acquisition & PredictCard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-4">
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="camera" class="h-4 w-4 text-sky-400"></i>
+                  Optical Facial Capillary Scanner
+                </h3>
+                <div class="flex items-center gap-2">
+                  <span id="rppg-pulse-dot" class="h-2 w-2 rounded-full bg-slate-600"></span>
+                  <span id="rppg-timer" class="text-xs font-mono text-slate-400 px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800">00:00</span>
+                </div>
+              </div>
+
+              <!-- Video Frame with Face Guide HUD -->
+              <div class="video-hud-container w-full h-56 rounded-2xl flex items-center justify-center relative overflow-hidden border border-slate-800">
+                <video id="rppg-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                <canvas id="rppg-hidden-canvas" class="hidden"></canvas>
+                <div id="rppg-face-guide" class="face-guide-oval flex items-center justify-center">
+                  <span class="text-[11px] text-teal-300 bg-slate-950/80 px-2.5 py-1 rounded-full border border-teal-800/70 pointer-events-none shadow-sm">
+                    Align Face Here
+                  </span>
+                </div>
+                <div id="rppg-idle-msg" class="absolute text-slate-300 text-xs sm:text-sm text-center px-5 pointer-events-none bg-slate-950/85 p-4 rounded-xl border border-slate-800 shadow-lg">
+                  Webcam in standby.<br>Click "Start 15s Optical Scan" to analyze pulse & breathing.
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs text-slate-400">
+                  <span>Scan Progress:</span>
+                  <span id="rppg-progress-text" class="font-mono text-slate-200">0%</span>
+                </div>
+                <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                  <div id="rppg-progress-bar" class="h-full bg-sky-500 transition-all duration-150" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <div class="flex flex-wrap items-center justify-between gap-2.5 pt-1">
+                <div class="flex items-center gap-2">
+                  <button id="btn-rppg-start" onclick="startRppgScan()" class="px-4 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white text-xs sm:text-sm font-semibold border border-sky-600 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="play" class="h-4 w-4"></i>
+                    <span>Start 15s Optical Scan</span>
+                  </button>
+                  <button id="btn-rppg-stop" onclick="stopRppgScan()" class="hidden px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-medium border border-slate-700 transition-colors">
+                    Cancel
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button onclick="simulateRppgPreset('healthy')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-850 text-slate-300 text-xs border border-slate-800 transition-colors">
+                    Preset: Healthy RSA
+                  </button>
+                  <button onclick="simulateRppgPreset('decoupled')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-850 text-amber-400 text-xs border border-slate-800 transition-colors">
+                    Preset: Decoupled
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: PredictCard -->
+          <div class="lg:col-span-6">
+            <div class="predict-card rounded-2xl shadow-sm border border-slate-800/90 overflow-hidden">
+              <div class="predict-header p-4 sm:p-5 flex items-center justify-between border-b border-slate-800/80">
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Test 3 Results: Cardiopulmonary Vitals</h3>
+                  <p class="text-xs text-slate-400">Heart rate, breathing rate, and autonomic synchrony</p>
+                </div>
+                <span id="rppg-risk-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-950 text-slate-400 border border-slate-800">
+                  Awaiting scan
+                </span>
+              </div>
+
+              <div class="predict-body p-4 sm:p-6 space-y-4 sm:space-y-5">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Heart Rate</div>
+                    <div id="rppg-metric-hr" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">BPM (Optical)</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Respiration</div>
+                    <div id="rppg-metric-rr" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Breaths / min</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">RSA E:I Ratio</div>
+                    <div id="rppg-metric-ei" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Healthy &ge; 1.20</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">HRV (Vagal)</div>
+                    <div id="rppg-metric-rmssd" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">RMSSD (ms)</div>
+                  </div>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-1.5">
+                    <i data-lucide="activity" class="h-4 w-4 text-teal-400"></i>
+                    <span id="rppg-status-title">Autonomic Impression:</span>
+                  </div>
+                  <p id="rppg-interpretation" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Perform the 15-second webcam scan or choose a preset to check heart-lung synchrony.
+                  </p>
+                </div>
+
+                <div class="border border-slate-800 rounded-xl bg-slate-900/90 p-4 space-y-2.5">
+                  <div class="flex items-center justify-between text-xs sm:text-sm">
+                    <span class="font-semibold text-slate-300">Synchronous Pulse & Respiration Waves</span>
+                    <span id="rppg-coherence-tag" class="text-xs font-mono text-slate-400">Coherence: --</span>
+                  </div>
+                  <div class="w-full h-36">
+                    <canvas id="rppg-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- UNIFIED OVERALL RESPIRATORY DIAGNOSIS & ACTIONABLE REPORT     -->
+      <!-- ============================================================= -->
+      <div class="clinical-card border border-teal-900/70 bg-gradient-to-b from-teal-950/30 to-slate-900/90 rounded-2xl p-6 sm:p-7 space-y-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-teal-900/40 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="h-3.5 w-3.5 rounded-full bg-teal-400 animate-pulse shadow-sm"></span>
+            <div>
+              <h3 class="text-lg font-bold text-slate-100 tracking-tight">Overall Unified Respiratory Assessment</h3>
+              <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Combines Lung Sounds + Virtual Spirometry + Vitals into a single clear diagnosis</p>
+            </div>
+          </div>
+          <span id="resp-composite-badge" class="px-3.5 py-1 rounded-full text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 shadow-sm self-start sm:self-auto">
+            Awaiting Test Data
+          </span>
+        </div>
+
+        <!-- Plain Language Summary Banner -->
+        <div class="p-5 rounded-xl bg-slate-900/95 border border-slate-800 shadow-sm space-y-2.5">
+          <div class="text-xs font-bold text-teal-400 uppercase tracking-wider">Diagnosis Summary in Plain Language:</div>
+          <p id="resp-composite-summary" class="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
+            Perform one or more tests above (Stethoscope Lung Sounds, Virtual Spirometry, or Webcam Vitals) to generate an integrated respiratory assessment.
+          </p>
+          <div id="resp-composite-findings" class="pt-3 border-t border-slate-800 text-xs sm:text-sm text-slate-300 space-y-1.5 hidden">
+            <!-- Findings will dynamically render here -->
+          </div>
+        </div>
+
+        <!-- Downloadable Doctor Report Button -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <div class="text-xs sm:text-sm text-slate-400">
+            Ready to share these diagnostic findings with your physician or specialist?
+          </div>
+          <button onclick="openDoctorReport('respiratory')" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs sm:text-sm font-semibold transition-colors flex items-center gap-2 shadow-md">
+            <i data-lucide="printer" class="h-4 w-4"></i>
+            <span>Generate Doctor Report (PDF / Print)</span>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ============================================================= -->
+      <!-- TIPS TO TAKE CARE: POST-PREDICTION CARE & LUNG HEALTH GUIDE   -->
+      <!-- ============================================================= -->
+      <div id="resp-care-tips" class="space-y-4 pt-4 border-t border-slate-800">
+        <div class="flex items-center gap-2">
+          <i data-lucide="heart-pulse" class="h-5 w-5 text-teal-400"></i>
+          <div>
+            <h3 class="text-base font-bold text-slate-100">Tips to Take Care: Everyday Lung & Breathing Support</h3>
+            <p class="text-xs text-slate-400">Evidence-based breathing exercises and protective self-care practices</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Tip 1: Pursed-Lip Breathing -->
+          <div class="care-tip-card space-y-2">
+            <div class="flex items-center gap-2 text-teal-400">
+              <i data-lucide="wind" class="h-4 w-4"></i>
+              <h4 class="text-xs font-bold text-slate-100">Pursed-Lip Breathing Technique</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>How to do it:</strong> Inhale slowly through your nose for 2 seconds. Pucker your lips like blowing out birthday candles, and exhale gently for 4 full seconds.
+            </p>
+            <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5">
+              <strong>Benefit:</strong> Keeps airways open longer during exhalation, clearing trapped stale air and calming shortness of breath.
+            </p>
+          </div>
+
+          <!-- Tip 2: Diaphragmatic Breathing -->
+          <div class="care-tip-card space-y-2">
+            <div class="flex items-center gap-2 text-teal-400">
+              <i data-lucide="activity" class="h-4 w-4"></i>
+              <h4 class="text-xs font-bold text-slate-100">Diaphragmatic (Belly) Breathing</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>How to do it:</strong> Sit comfortably with one hand on your belly. Inhale through your nose, feeling your belly push your hand outward. Exhale gently while belly falls inward.
+            </p>
+            <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5">
+              <strong>Benefit:</strong> Strengthens the main breathing muscle (diaphragm) and relieves tension in neck and shoulder muscles.
+            </p>
+          </div>
+
+          <!-- Tip 3: Hydration & Air Clearance -->
+          <div class="care-tip-card space-y-2">
+            <div class="flex items-center gap-2 text-teal-400">
+              <i data-lucide="droplets" class="h-4 w-4"></i>
+              <h4 class="text-xs font-bold text-slate-100">Hydration & Mucus Clearance</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Drink 6–8 glasses of warm water or herbal tea daily. Staying hydrated keeps airway secretions thin and much easier to clear naturally without intense coughing.
+            </p>
+            <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5">
+              <strong>Tip:</strong> Avoid ice-cold beverages if you notice they trigger bronchial spasms or cough.
+            </p>
+          </div>
+
+          <!-- Tip 4: Environmental Protection -->
+          <div class="care-tip-card space-y-2">
+            <div class="flex items-center gap-2 text-teal-400">
+              <i data-lucide="shield-alert" class="h-4 w-4"></i>
+              <h4 class="text-xs font-bold text-slate-100">Avoid Respiratory Triggers</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Stay away from secondhand tobacco smoke, wood-burning fireplaces, harsh cleaning chemicals, and aerosol sprays. Use a HEPA air purifier in the bedroom.
+            </p>
+            <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5">
+              <strong>Cold Weather:</strong> Wrap a light scarf over your mouth and nose when going outside in cold, dry weather.
+            </p>
+          </div>
+
+          <!-- Tip 5: Gentle Aerobic Movement -->
+          <div class="care-tip-card space-y-2">
+            <div class="flex items-center gap-2 text-teal-400">
+              <i data-lucide="footprints" class="h-4 w-4"></i>
+              <h4 class="text-xs font-bold text-slate-100">Gentle Daily Walking</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Aim for 15–20 minutes of leisurely walking on level ground each day. Pace your steps with your breathing (e.g., inhale for 2 steps, exhale for 4 steps).
+            </p>
+            <p class="text-[11px] text-slate-400 border-t border-slate-800 pt-1.5">
+              <strong>Pacing:</strong> Stop and rest whenever needed; regular gentle activity expands functional lung capacity over time.
+            </p>
+          </div>
+
+          <!-- Tip 6: Warning Signs / Red Flags -->
+          <div class="care-tip-card space-y-2 border-red-900/60 bg-red-950/20">
+            <div class="flex items-center gap-2 text-red-400">
+              <i data-lucide="alert-triangle" class="h-4 w-4"></i>
+              <h4 class="text-xs font-bold text-red-300">When to Seek Immediate Medical Help</h4>
+            </div>
+            <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
+              <li>Sudden severe shortness of breath that does not ease after rest.</li>
+              <li>Bluish tint around your lips, tongue, or fingernails.</li>
+              <li>Chest tightness, pressure, or sharp pain when inhaling.</li>
+              <li>High fever with persistent coughing up of thick yellow/green mucus.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: PARKINSON'S ASSESSMENT CENTER (ALL PARKINSON TESTS IN ONE) -->
+    <!-- ================================================================= -->
+    <section id="tab-parkinson" class="space-y-6 hidden">
+      <!-- Center Header -->
+      <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-950/80 border border-amber-800 text-amber-400 text-xs font-semibold mb-1">
+            <i data-lucide="brain" class="h-3.5 w-3.5"></i>
+            Parkinson's Assessment Center
+          </div>
+          <h2 class="text-xl font-bold text-slate-100">Complete Neurological Screening Suite</h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Conduct all Parkinson's tests on a single page: Voice Phonation (MPT & 22 Biomarkers), Digital Archimedes Spiral Drawing, and Clinical Calibration.
+          </p>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <a href="#park-care-tips" class="px-3 py-1.5 rounded bg-slate-850 hover:bg-slate-800 text-slate-300 text-xs border border-slate-750 transition-colors flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="h-3.5 w-3.5 text-amber-400"></i>
+            <span>Tips to Take Care</span>
+          </a>
+          <button onclick="openDoctorReport('parkinson')" class="px-3.5 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-semibold border border-amber-600 transition-colors flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="file-text" class="h-3.5 w-3.5"></i>
+            <span>Doctor Report (PDF)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Test Navigation Filter Bar -->
+      <div class="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900 border border-slate-800 overflow-x-auto text-xs">
+        <button onclick="filterParkStation('all')" id="pill-park-all" class="px-3 py-1 rounded font-medium transition-colors bg-slate-800 text-amber-300">
+          All Tests Overview
+        </button>
+        <button onclick="filterParkStation('phonation')" id="pill-park-phon" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200 transition-colors">
+          1. Voice Phonation & Stamina (MPT)
+        </button>
+        <button onclick="filterParkStation('spiral')" id="pill-park-spiral" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200 transition-colors">
+          2. Spiral Drawing (Tremor Kinematics)
+        </button>
+        <button onclick="filterParkStation('calibration')" id="pill-park-calib" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200 transition-colors">
+          3. Clinical Presets & Biomarkers
+        </button>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TEST STATION 1: VOCAL PHONATION & STAMINA (MPT TEST)          -->
+      <!-- ============================================================= -->
+      <div id="station-park-phonation" class="space-y-4">
+        <!-- Step-by-Step Test Guide -->
+        <div class="guide-card p-4 rounded-xl">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGuide('guide-park-phon')">
+            <div class="flex items-center gap-2.5">
+              <span class="step-badge" style="background-color: #78350f; color: #fde68a;">1</span>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">How to Conduct Test 1: Voice Phonation & Stamina (MPT)</h3>
+                <p class="text-xs text-slate-400">Step-by-step instructions for sustained vowel recording and vocal steadiness analysis</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" id="guide-park-phon-icon" class="h-4 w-4 text-slate-400 transition-transform"></i>
+          </div>
+          <div id="guide-park-phon" class="mt-3.5 pt-3.5 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs sm:text-sm text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-amber-400 block mb-1 font-semibold">Step 1: Deep Inhale</strong>
+              Sit upright in a quiet room. Hold your microphone about 10–15 cm from your mouth and take a deep breath.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-amber-400 block mb-1 font-semibold">Step 2: Steady "Ahhh"</strong>
+              Press "Record sustained phonation" and vocalize a clear, loud "aaah" sound at a comfortable steady pitch for as long as possible.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-amber-400 block mb-1 font-semibold">Step 3: Instant Evaluation</strong>
+              Click "Analyze phonation test" or choose one of the preloaded clinical presets below to screen for vocal tremor.
+            </div>
+          </div>
+        </div>
+
+        <!-- Acquisition & PredictCard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column: Recorder & Presets -->
+          <div class="lg:col-span-6 space-y-4">
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="mic" class="h-4 w-4 text-amber-400"></i>
+                  Maximum Phonation Time (MPT) Voice Recording
+                </h3>
+                <span id="park-recording-timer" class="text-xs font-mono text-slate-400 px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800">00:00</span>
+              </div>
+
+              <!-- Oscilloscope -->
+              <div class="w-full h-24 oscilloscope-box rounded-xl relative flex items-center justify-center overflow-hidden border border-slate-800">
+                <canvas id="park-audio-canvas" class="w-full h-full"></canvas>
+                <div id="park-mic-idle-msg" class="absolute text-slate-400 text-xs text-center px-4 pointer-events-none">
+                  Microphone standby. Press "Record sustained phonation" when ready to vocalize "aaah".
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <div class="flex flex-wrap items-center gap-3 pt-1">
+                <button id="btn-park-record-toggle" onclick="toggleParkinsonRecording()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-2 shadow-sm">
+                  <span class="h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                  <span id="btn-park-record-label">Record sustained phonation</span>
+                </button>
+                <audio id="park-recorded-playback" controls class="hidden h-8 max-w-[200px]"></audio>
+                <button id="btn-analyze-park-recorded" onclick="analyzeRecordedParkinsonAudio()" class="hidden px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-600 text-white text-xs sm:text-sm font-semibold border border-amber-600 transition-colors shadow-sm flex items-center gap-1.5">
+                  <i data-lucide="activity" class="h-3.5 w-3.5"></i>
+                  <span>Analyze phonation test</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Clinical Preset Profiles (1-Click Test) -->
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="sliders" class="h-4 w-4 text-amber-400"></i>
+                  1-Click Standardized Clinical Cohort Profiles
+                </h3>
+                <span class="text-xs text-slate-400 font-mono">Oxford Voice Database</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <button onclick="loadParkinsonPreset('healthy_female')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                  <span class="font-semibold text-emerald-400 block text-xs sm:text-sm">Healthy Control (Female)</span>
+                  <span class="text-[11px] text-slate-400">Steady voice (Fo 197 Hz)</span>
+                </button>
+                <button onclick="loadParkinsonPreset('healthy_male')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                  <span class="font-semibold text-emerald-400 block text-xs sm:text-sm">Healthy Control (Male)</span>
+                  <span class="text-[11px] text-slate-400">Steady voice (Fo 198 Hz)</span>
+                </button>
+                <button onclick="loadParkinsonPreset('parkinson_moderate')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                  <span class="font-semibold text-amber-400 block text-xs sm:text-sm">Parkinson Moderate</span>
+                  <span class="text-[11px] text-slate-400">Early micro-tremor & jitter</span>
+                </button>
+                <button onclick="loadParkinsonPreset('parkinson_severe')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 text-left transition-colors">
+                  <span class="font-semibold text-red-400 block text-xs sm:text-sm">Parkinson Severe</span>
+                  <span class="text-[11px] text-slate-400">Marked vocal dysphonia</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: PredictCard -->
+          <div class="lg:col-span-6">
+            <div class="predict-card rounded-2xl shadow-sm border border-slate-800/90 overflow-hidden">
+              <div class="predict-header p-4 sm:p-5 flex items-center justify-between border-b border-slate-800/80">
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Test 1 Results: Voice Phonation (MPT)</h3>
+                  <span class="text-xs text-slate-400">Vocal dysphonia & stability report</span>
+                </div>
+                <span id="parkinson-badge-timestamp" class="text-xs font-mono text-slate-400 px-2.5 py-0.5 rounded-full bg-slate-950 border border-slate-800">Standby</span>
+              </div>
+
+              <div class="predict-body p-4 sm:p-6 space-y-4 sm:space-y-5">
+                <div id="parkinson-placeholder" class="py-12 text-center text-slate-500 space-y-2.5">
+                  <div class="h-12 w-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-slate-500">
+                    <i data-lucide="mic" class="h-6 w-6"></i>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-400">No voice test analyzed yet.<br>Record a sustained "aaah" or click a clinical preset to screen.</p>
+                </div>
+
+                <div id="parkinson-result-details" class="hidden space-y-4">
+                  <div id="parkinson-diagnosis-banner" class="p-4 rounded-xl border border-slate-700/80 bg-slate-900/80 shadow-sm">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-medium text-slate-400">Primary Classification</span>
+                      <span id="parkinson-risk-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+                    </div>
+                    <h4 id="parkinson-diagnosis-text" class="text-lg sm:text-xl font-bold text-slate-100 mt-1.5 tracking-tight"></h4>
+                    <p id="parkinson-confidence-text" class="text-xs text-slate-300 mt-1 font-mono"></p>
+                  </div>
+
+                  <div class="space-y-2">
+                    <div class="flex justify-between text-xs sm:text-sm font-medium">
+                      <span class="text-slate-300">Parkinson Probability: <span id="parkinson-pd-pct" class="font-mono text-slate-100">0%</span></span>
+                      <span class="text-slate-300">Healthy Control: <span id="parkinson-h-pct" class="font-mono text-slate-100">0%</span></span>
+                    </div>
+                    <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+                      <div id="parkinson-bar-pd" class="h-full bg-red-500 transition-all duration-500" style="width: 50%"></div>
+                      <div id="parkinson-bar-h" class="h-full bg-emerald-500 transition-all duration-500" style="width: 50%"></div>
+                    </div>
+                  </div>
+
+                  <!-- MPT Box -->
+                  <div id="parkinson-mpt-box" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs sm:text-sm font-semibold text-slate-300">Vocal Stamina (Maximum Phonation Time):</span>
+                      <span id="mpt-val-status" class="text-xs font-mono font-medium text-slate-300"></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5 text-xs">
+                      <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 text-center">
+                        <span class="text-slate-400 block text-[11px]">Duration</span>
+                        <span id="mpt-val-seconds" class="text-slate-100 font-mono font-bold text-base mt-0.5">-</span>
+                      </div>
+                      <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 text-center">
+                        <span class="text-slate-400 block text-[11px]">Pitch</span>
+                        <span id="mpt-val-pitch" class="text-slate-100 font-mono font-bold text-base mt-0.5">-</span>
+                      </div>
+                    </div>
+                    <p id="mpt-clinical-note" class="text-xs text-slate-300 leading-relaxed"></p>
+                  </div>
+
+                  <!-- Plain Language Summary -->
+                  <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs sm:text-sm text-slate-300 space-y-1">
+                    <span class="font-semibold text-amber-400 block">Plain-Language Summary:</span>
+                    <span id="parkinson-interpretation-text" class="leading-relaxed"></span>
+                  </div>
+
+                  <!-- Biomarker Deviation Telemetry Table -->
+                  <div class="border border-slate-800 rounded-xl bg-slate-950/90 p-3 space-y-2">
+                    <span class="text-xs font-semibold text-slate-300 block">MDVP Perturbation Telemetry</span>
+                    <div class="max-h-36 overflow-y-auto rounded-lg">
+                      <table class="w-full text-xs text-left">
+                        <thead>
+                          <tr class="text-slate-400 border-b border-slate-800">
+                            <th class="pb-1.5">Feature</th>
+                            <th class="pb-1.5">Value</th>
+                            <th class="pb-1.5">Norm</th>
+                            <th class="pb-1.5 text-right">Dev</th>
+                          </tr>
+                        </thead>
+                        <tbody id="biomarker-table-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TEST STATION 2: DIGITAL ARCHIMEDES SPIRAL (MOTOR KINEMATICS)  -->
+      <!-- ============================================================= -->
+      <div id="station-park-spiral" class="space-y-4 pt-4 border-t border-slate-800">
+        <!-- Step-by-Step Test Guide -->
+        <div class="guide-card p-4 rounded-xl">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGuide('guide-park-spiral')">
+            <div class="flex items-center gap-2.5">
+              <span class="step-badge" style="background-color: #78350f; color: #fde68a;">2</span>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">How to Conduct Test 2: Archimedes Spiral Drawing (Hand Steadiness)</h3>
+                <p class="text-xs text-slate-400">Step-by-step instructions for motor kinematic tremor and drawing smoothness analysis</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" id="guide-park-spiral-icon" class="h-4 w-4 text-slate-400 transition-transform"></i>
+          </div>
+          <div id="guide-park-spiral" class="mt-3.5 pt-3.5 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs sm:text-sm text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-amber-400 block mb-1 font-semibold">Step 1: Start at Center Dot</strong>
+              Position your mouse cursor (or stylus / finger on touchscreens) directly over the red dot in the center of the spiral.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-amber-400 block mb-1 font-semibold">Step 2: Trace Outward Smoothly</strong>
+              Trace outward along the circular spiral lines steadily at your natural drawing speed without rushing.
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <strong class="text-amber-400 block mb-1 font-semibold">Step 3: Analyze Hand Steadiness</strong>
+              Click "Analyze Kinematics", or use the simulation buttons to test healthy smooth drawing vs. parkinsonian action tremor.
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas & PredictCard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column: Interactive Canvas -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-5 space-y-3.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <i data-lucide="pen-tool" class="h-4 w-4 text-amber-400"></i>
+                  Interactive Drawing Canvas (Touch or Mouse)
+                </h3>
+                <div class="flex items-center gap-3 text-xs font-mono">
+                  <span id="spiral-points-count" class="text-slate-400">0 coordinates</span>
+                  <span id="spiral-timer" class="text-amber-400 font-semibold px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800">00:00</span>
+                </div>
+              </div>
+
+              <div class="w-full flex justify-center bg-slate-950 rounded-2xl border border-slate-800 p-2.5 overflow-hidden">
+                <canvas id="spiral-canvas" width="500" height="400" class="canvas-drawing-area max-w-full rounded-xl"></canvas>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-2.5 pt-1">
+                <div class="flex items-center gap-2">
+                  <button onclick="clearSpiralCanvas()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="rotate-ccw" class="h-3.5 w-3.5"></i>
+                    <span>Clear</span>
+                  </button>
+                  <button onclick="analyzeSpiralPoints()" id="btn-analyze-spiral" class="px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-600 text-white text-xs sm:text-sm font-semibold border border-amber-600 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="activity" class="h-3.5 w-3.5"></i>
+                    <span>Analyze Kinematics</span>
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button onclick="simulateSpiralPreset('healthy')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-850 text-slate-300 text-xs border border-slate-800 transition-colors">
+                    Preset: Steady
+                  </button>
+                  <button onclick="simulateSpiralPreset('parkinson')" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-850 text-amber-400 text-xs border border-slate-800 transition-colors">
+                    Preset: Tremor
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: PredictCard -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="predict-card rounded-2xl shadow-sm border border-slate-800/90 overflow-hidden">
+              <div class="predict-header p-4 sm:p-5 flex items-center justify-between border-b border-slate-800/80">
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Test 2 Results: Motor Steadiness</h3>
+                  <p class="text-xs text-slate-400">Micrographia & action tremor stratification</p>
+                </div>
+                <span id="spiral-risk-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-950 text-slate-400 border border-slate-800">
+                  Awaiting drawing
+                </span>
+              </div>
+
+              <div class="predict-body p-4 sm:p-6 space-y-4 sm:space-y-5">
+                <!-- Score Bar -->
+                <div class="space-y-2">
+                  <div class="flex justify-between text-xs sm:text-sm">
+                    <span class="text-slate-400">Motor Kinematic Risk Score:</span>
+                    <span id="spiral-score-val" class="font-mono font-semibold text-slate-200">--</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                    <div id="spiral-score-bar" class="h-full bg-teal-500 transition-all duration-500" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <!-- Metric Grid -->
+                <div class="grid grid-cols-2 gap-2.5 text-center">
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Hand Smoothness</div>
+                    <div id="spiral-metric-jerk" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div id="spiral-jerk-status" class="text-[10px] text-slate-500">Normal &lt; 25.0</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Letter Shrinkage</div>
+                    <div id="spiral-metric-decay" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div id="spiral-decay-status" class="text-[10px] text-slate-500">Micrographia</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Tremor Peak</div>
+                    <div id="spiral-metric-tremor" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div class="text-[10px] text-slate-500">Target: 4-7 Hz</div>
+                  </div>
+                  <div class="metric-box p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-[11px] text-slate-400">Duration</div>
+                    <div id="spiral-metric-duration" class="text-base font-bold text-slate-100 font-mono mt-0.5">--</div>
+                    <div id="spiral-stalls-val" class="text-[10px] text-slate-500">0 stalls</div>
+                  </div>
+                </div>
+
+                <!-- Clinical Interpretation -->
+                <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div class="text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-1.5">
+                    <i data-lucide="stethoscope" class="h-4 w-4 text-amber-400"></i>
+                    What This Means for You:
+                  </div>
+                  <p id="spiral-interpretation" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Trace the spiral or choose a preset to check hand steadiness and tremor frequency.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TEST STATION 3: CLINICAL CALIBRATION & 22 BIOMARKERS          -->
+      <!-- ============================================================= -->
+      <div id="station-park-calibration" class="space-y-4 pt-4 border-t border-slate-800">
+        <div class="guide-card p-4 rounded-xl">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGuide('guide-park-calib')">
+            <div class="flex items-center gap-2.5">
+              <span class="step-badge" style="background-color: #78350f; color: #fde68a;">3</span>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Acoustic MDVP Parameters Calibration (Clinician Tool)</h3>
+                <p class="text-xs text-slate-400">Adjust individual acoustic perturbation parameters or review reference limits</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" id="guide-park-calib-icon" class="h-4 w-4 text-slate-400 transition-transform"></i>
+          </div>
+          <div id="guide-park-calib" class="mt-3.5 pt-3.5 border-t border-slate-800/80 space-y-3.5">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <label class="block text-[11px] text-slate-400 mb-1 font-medium">MDVP:Fo (Hz)</label>
+                <input type="number" step="any" id="feat_MDVP:Fo(Hz)" class="w-full bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs focus:border-amber-500 focus:outline-none">
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <label class="block text-[11px] text-slate-400 mb-1 font-medium">Jitter (%)</label>
+                <input type="number" step="any" id="feat_MDVP:Jitter(%)" class="w-full bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs focus:border-amber-500 focus:outline-none">
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <label class="block text-[11px] text-slate-400 mb-1 font-medium">Shimmer</label>
+                <input type="number" step="any" id="feat_MDVP:Shimmer" class="w-full bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs focus:border-amber-500 focus:outline-none">
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <label class="block text-[11px] text-slate-400 mb-1 font-medium">HNR (dB)</label>
+                <input type="number" step="any" id="feat_HNR" class="w-full bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs focus:border-amber-500 focus:outline-none">
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <label class="block text-[11px] text-slate-400 mb-1 font-medium">RPDE</label>
+                <input type="number" step="any" id="feat_RPDE" class="w-full bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs focus:border-amber-500 focus:outline-none">
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <label class="block text-[11px] text-slate-400 mb-1 font-medium">DFA</label>
+                <input type="number" step="any" id="feat_DFA" class="w-full bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs focus:border-amber-500 focus:outline-none">
+              </div>
+            </div>
+            <button onclick="submitParkinsonPrediction('Custom Calibration Parameters')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition-colors shadow-sm">
+              Evaluate Custom Parameters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- UNIFIED OVERALL PARKINSON DIAGNOSIS & ACTIONABLE REPORT       -->
+      <!-- ============================================================= -->
+      <div class="clinical-card border border-amber-900/70 bg-gradient-to-b from-amber-950/30 to-slate-900/90 rounded-2xl p-6 sm:p-7 space-y-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-900/40 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="h-3.5 w-3.5 rounded-full bg-amber-400 animate-pulse shadow-sm"></span>
+            <div>
+              <h3 class="text-lg font-bold text-slate-100 tracking-tight">Overall Unified Parkinson Assessment</h3>
+              <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Combines Vocal Dysphonia (MPT) + Spiral Motor Kinematics into a single clear diagnosis</p>
+            </div>
+          </div>
+          <span id="park-composite-badge" class="px-3.5 py-1 rounded-full text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 shadow-sm self-start sm:self-auto">
+            Awaiting Test Data
+          </span>
+        </div>
+
+        <!-- Plain Language Summary Banner -->
+        <div class="p-5 rounded-xl bg-slate-900/95 border border-slate-800 shadow-sm space-y-2.5">
+          <div class="text-xs font-bold text-amber-400 uppercase tracking-wider">Diagnosis Summary in Plain Language:</div>
+          <p id="park-composite-summary" class="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
+            Perform one or both tests above (Voice Phonation or Spiral Drawing) to generate a unified neurological assessment.
+          </p>
+          <div id="park-composite-findings" class="pt-3 border-t border-slate-800 text-xs sm:text-sm text-slate-300 space-y-1.5 hidden">
+            <!-- Findings dynamically inserted here -->
+          </div>
+        </div>
+
+        <!-- Downloadable Doctor Report Button -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <div class="text-xs sm:text-sm text-slate-400">
+            Ready to share these diagnostic findings with your neurologist or physician?
+          </div>
+          <button onclick="openDoctorReport('parkinson')" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-semibold transition-colors flex items-center gap-2 shadow-md">
+            <i data-lucide="printer" class="h-4 w-4"></i>
+            <span>Generate Doctor Report (PDF / Print)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- TIPS TO TAKE CARE: POST-PREDICTION CARE & MOTOR SUPPORT GUIDE -->
+      <!-- ============================================================= -->
+      <div id="park-care-tips" class="space-y-4 pt-4 border-t border-slate-800">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="h-5 w-5 text-amber-400"></i>
+          <div>
+            <h3 class="text-base font-bold text-slate-100">Tips to Take Care: Everyday Vocal & Motor Wellness</h3>
+            <p class="text-xs text-slate-400">Evidence-based vocal strengthening drills, fine-motor exercises, and safety tips</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Tip 1: Daily Loudness Drills -->
+          <div class="care-tip-card space-y-2 p-5 rounded-2xl">
+            <div class="flex items-center gap-2 text-amber-400">
+              <i data-lucide="volume-2" class="h-4 w-4"></i>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-100">Daily Sustained "Ahhh" Loudness Drills</h4>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <strong>How to do it:</strong> Take a deep breath and vocalize a loud, clear "aaah" at a comfortable pitch, holding it as steady as you can for 10–15 seconds. Repeat 5 times daily.
+            </p>
+            <p class="text-xs text-slate-400 border-t border-slate-800/80 pt-2">
+              <strong>Benefit:</strong> Strengthens vocal cord closure, prevents speech fading, and improves breath support coordination.
+            </p>
+          </div>
+
+          <!-- Tip 2: Expressive Reading -->
+          <div class="care-tip-card space-y-2 p-5 rounded-2xl">
+            <div class="flex items-center gap-2 text-amber-400">
+              <i data-lucide="book-open" class="h-4 w-4"></i>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-100">Pitch Glides & Expressive Reading</h4>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <strong>How to do it:</strong> Read a book or newspaper paragraph aloud for 5 minutes using exaggerated pitch changes and enthusiastic vocal inflection.
+            </p>
+            <p class="text-xs text-slate-400 border-t border-slate-800/80 pt-2">
+              <strong>Benefit:</strong> Counters monotone vocal pitch (hypophonia) and keeps laryngeal muscles flexible.
+            </p>
+          </div>
+
+          <!-- Tip 3: Finger Tapping & Hand Opening -->
+          <div class="care-tip-card space-y-2 p-5 rounded-2xl">
+            <div class="flex items-center gap-2 text-amber-400">
+              <i data-lucide="hand" class="h-4 w-4"></i>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-100">Finger Tapping & Hand Opening Sequences</h4>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <strong>How to do it:</strong> Open and close your fingers as wide and fast as possible for 10 reps. Then tap your thumb to each fingertip one by one, forward and backward.
+            </p>
+            <p class="text-xs text-slate-400 border-t border-slate-800/80 pt-2">
+              <strong>Benefit:</strong> Stimulates fine motor coordination in the fingers and combats morning stiffness.
+            </p>
+          </div>
+
+          <!-- Tip 4: Big & Bold Handwriting -->
+          <div class="care-tip-card space-y-2 p-5 rounded-2xl">
+            <div class="flex items-center gap-2 text-amber-400">
+              <i data-lucide="pen-tool" class="h-4 w-4"></i>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-100">Big & Bold Handwriting Practice</h4>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Spend 5 minutes each day writing sentences on lined paper using deliberately large, tall cursive letters.
+            </p>
+            <p class="text-xs text-slate-400 border-t border-slate-800/80 pt-2">
+              <strong>Benefit:</strong> Re-trains brain motor circuits to prevent handwriting shrinkage (micrographia).
+            </p>
+          </div>
+
+          <!-- Tip 5: Posture & Balance Safety -->
+          <div class="care-tip-card space-y-2 p-5 rounded-2xl">
+            <div class="flex items-center gap-2 text-amber-400">
+              <i data-lucide="shield-check" class="h-4 w-4"></i>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-100">Posture & Fall Prevention</h4>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Walk with deliberate heel-to-toe strides with normal reciprocal arm swing. Keep hallways well-lit and remove loose throw rugs or cords.
+            </p>
+            <p class="text-xs text-slate-400 border-t border-slate-800/80 pt-2">
+              <strong>Tip:</strong> Avoid sudden pivoting turns; take a gentle U-turn curve with small steps when turning around.
+            </p>
+          </div>
+
+          <!-- Tip 6: Warning Signs / Red Flags -->
+          <div class="care-tip-card space-y-2 border-red-900/60 bg-red-950/20 p-5 rounded-2xl">
+            <div class="flex items-center gap-2 text-red-400">
+              <i data-lucide="alert-triangle" class="h-4 w-4"></i>
+              <h4 class="text-xs sm:text-sm font-bold text-red-300">When to Consult a Neurologist</h4>
+            </div>
+            <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+              <li>A resting tremor in your fingers, hand, or chin that occurs when muscles are relaxed.</li>
+              <li>Stiffness or heaviness in arms or legs when walking or rolling over in bed.</li>
+              <li>Noticeable slowness when standing up from a low sofa or buttoning clothing.</li>
+              <li>Noticeable softening of your voice that others repeatedly mention.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: COHORT BATCH SCREENING -->
+    <!-- ================================================================= -->
+    <section id="tab-batch" class="space-y-6 hidden">
+      <div class="border-b border-slate-800 pb-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-100 tracking-tight">Cohort Batch Screening</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Multi-patient dataset ingestion and algorithmic risk stratification</p>
+        </div>
+        <button onclick="downloadSampleParkinsonCSV()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition-colors flex items-center gap-2 shadow-sm">
+          <i data-lucide="download" class="h-4 w-4 text-slate-400"></i>
+          <span>Download Sample CSV</span>
+        </button>
+      </div>
+
+      <!-- File Drop Area -->
+      <div class="clinical-card border-2 border-dashed border-slate-700/80 hover:border-teal-500/80 bg-slate-900/50 rounded-2xl p-8 text-center transition-all">
+        <input type="file" id="batch-file-input" accept=".csv" class="hidden" onchange="handleBatchFileUpload(event)">
+        <label for="batch-file-input" class="cursor-pointer flex flex-col items-center justify-center space-y-3">
+          <div class="h-12 w-12 rounded-full bg-slate-800/90 border border-slate-700 flex items-center justify-center text-teal-400">
+            <i data-lucide="file-spreadsheet" class="h-6 w-6"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">
+              Click to upload cohort CSV file or drag and drop
+            </p>
+            <p class="text-xs text-slate-400 mt-1">
+              Requires columns corresponding to MDVP vocal parameters (e.g. parkinsons.data)
+            </p>
+          </div>
+          <span id="batch-file-name" class="text-xs text-teal-400 font-mono hidden pt-1 font-semibold"></span>
+        </label>
+        <button id="btn-analyze-batch" onclick="submitBatchCSV()" class="mt-4 hidden px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white text-xs sm:text-sm font-semibold border border-teal-600 transition-colors mx-auto shadow-sm flex items-center gap-2">
+          <i data-lucide="activity" class="h-4 w-4"></i>
+          <span>Process Cohort Dataset</span>
+        </button>
+      </div>
+
+      <!-- Results Container -->
+      <div id="batch-results-container" class="hidden space-y-5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="metric-box p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800 text-center">
+            <span class="text-slate-400 block text-xs">Total Patients</span>
+            <span id="batch-stat-total" class="text-xl font-bold text-slate-100 font-mono mt-1 block">0</span>
+          </div>
+          <div class="metric-box p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800 text-center">
+            <span class="text-slate-400 block text-xs">Parkinson Detected</span>
+            <span id="batch-stat-positive" class="text-xl font-bold text-red-400 font-mono mt-1 block">0</span>
+          </div>
+          <div class="metric-box p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800 text-center">
+            <span class="text-slate-400 block text-xs">Healthy Controls</span>
+            <span id="batch-stat-negative" class="text-xl font-bold text-emerald-400 font-mono mt-1 block">0</span>
+          </div>
+          <div class="metric-box p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800 text-center">
+            <span class="text-slate-400 block text-xs">Positivity Rate</span>
+            <span id="batch-stat-rate" class="text-xl font-bold text-slate-100 font-mono mt-1 block">0%</span>
+          </div>
+        </div>
+
+        <div class="clinical-card border border-slate-800/90 bg-slate-900/80 rounded-2xl p-5 space-y-4 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-200">Patient Risk Stratification Table</h3>
+            <button onclick="exportBatchResultsCSV()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-medium border border-slate-700 flex items-center gap-1.5 transition-colors self-start sm:self-auto">
+              <i data-lucide="file-output" class="h-3.5 w-3.5"></i>
+              <span>Export Enriched CSV</span>
+            </button>
+          </div>
+
+          <div class="max-h-80 overflow-y-auto rounded-xl border border-slate-800 overflow-hidden">
+            <table class="clinical-table">
+              <thead>
+                <tr>
+                  <th>Patient ID</th>
+                  <th>Classification</th>
+                  <th>Parkinson Probability</th>
+                  <th>Healthy Probability</th>
+                  <th class="text-right">Risk Stratum</th>
+                </tr>
+              </thead>
+              <tbody id="batch-table-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 5: MODEL SPECIFICATIONS -->
+    <!-- ================================================================= -->
+    <section id="tab-models-info" class="space-y-6 hidden">
+      <div class="border-b border-slate-800 pb-3.5">
+        <h2 class="text-xl font-bold text-slate-100 tracking-tight">Model Specifications and Validation Protocol</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Technical clinical documentation, hyperparameters, and cross-validation configurations</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+        <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-6 space-y-4 shadow-sm">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="font-bold text-slate-100 text-sm sm:text-base">Parkinson Vocal Dysphonia Pipeline</h3>
+            <span class="font-mono text-xs text-amber-400 px-2.5 py-0.5 rounded-full bg-amber-950/70 border border-amber-800/60">XGBoost Classifier</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed text-xs sm:text-sm">
+            Trained on voice recordings from Oxford University's phonation dysphonia cohort. Features undergo z-score standardization followed by median-threshold tree feature selection.
+          </p>
+          <div class="space-y-2 font-mono pt-1 text-xs">
+            <div class="flex justify-between py-1.5 border-b border-slate-800/80">
+              <span class="text-slate-400">Scaling:</span>
+              <span class="text-slate-200 font-semibold">StandardScaler</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-800/80">
+              <span class="text-slate-400">Feature selector:</span>
+              <span class="text-slate-200 font-semibold">SelectFromModel (median)</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-800/80">
+              <span class="text-slate-400">Estimators:</span>
+              <span class="text-slate-200 font-semibold">300 trees, depth 4</span>
+            </div>
+            <div class="flex justify-between py-1.5">
+              <span class="text-slate-400">Validation:</span>
+              <span class="text-slate-200 font-semibold">5-Fold Stratified K-Fold</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="clinical-card border border-slate-800/90 bg-slate-900/70 rounded-2xl p-6 space-y-4 shadow-sm">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="font-bold text-slate-100 text-sm sm:text-base">Respiratory Sound Pipeline</h3>
+            <span class="font-mono text-xs text-teal-400 px-2.5 py-0.5 rounded-full bg-teal-950/70 border border-teal-800/60">LightGBM Classifier</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed text-xs sm:text-sm">
+            Trained on multi-channel auscultations from the ICBHI Respiratory Sound Database. Input audio is resampled to 4,000 Hz with 60 extracted spectral features.
+          </p>
+          <div class="space-y-2 font-mono pt-1 text-xs">
+            <div class="flex justify-between py-1.5 border-b border-slate-800/80">
+              <span class="text-slate-400">Nyquist target:</span>
+              <span class="text-slate-200 font-semibold">4,000 Hz</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-800/80">
+              <span class="text-slate-400">Feature dimension:</span>
+              <span class="text-slate-200 font-semibold">60 acoustic features</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-800/80">
+              <span class="text-slate-400">Class balancing:</span>
+              <span class="text-slate-200 font-semibold">class_weight="balanced"</span>
+            </div>
+            <div class="flex justify-between py-1.5">
+              <span class="text-slate-400">Validation:</span>
+              <span class="text-slate-200 font-semibold">Stratified Group K-Fold</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ================================================================= -->
+    <!-- CLINICAL DOCTOR REPORT MODAL (PRINT & PDF READY)                  -->
+    <!-- ================================================================= -->
+    <div id="report-modal" class="report-modal-backdrop hidden">
+      <div class="report-modal-container rounded-2xl overflow-hidden shadow-2xl">
+        <!-- Modal Toolbar (No-Print) -->
+        <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between no-print">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="file-text" class="h-4 w-4 text-teal-400"></i>
+            <span class="text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wider">Clinical Decision Support Report</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="printDoctorReport()" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-colors shadow">
+              <i data-lucide="printer" class="h-4 w-4"></i>
+              <span>Print / Save as PDF</span>
+            </button>
+            <button onclick="closeDoctorReport()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs sm:text-sm font-medium border border-slate-700 transition-colors">
+              Close
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Document Canvas (The Paper) -->
+        <div class="p-4 md:p-6 bg-slate-950/50">
+          <div id="report-paper-content" class="report-paper shadow-2xl space-y-6">
+            <!-- Dynamic Content Injected by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Clinical Footer -->
+  <footer class="border-t border-slate-800 bg-slate-900 text-slate-500 text-xs py-3.5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>Clinical decision support screening tool. Not an autonomous diagnostic instrument.</span>
+      <span class="font-mono text-[11px]">NeuroBreathe Clinical Platform v1.1</span>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

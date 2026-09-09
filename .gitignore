@@ -1,0 +1,10 @@
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+node_modules/
+.env
+*.zip
+*.tar.gz
+temp_uploads/*
+!temp_uploads/.gitkeep
